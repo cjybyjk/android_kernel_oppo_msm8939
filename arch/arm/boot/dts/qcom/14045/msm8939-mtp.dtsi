@@ -288,7 +288,6 @@
 			synaptics,enable2v8-gpio = <&pm8916_gpios 2 0x00>;
 			vdd_2v8-supply = <&pm8916_l11>;
 			vcc_i2c_1v8-supply = <&pm8916_l16>;
-			synaptics,black-gesture-enabled;
 			synaptics,i2c-pull-up;
 			synaptics,power-down;
 			synaptics,disable-gpios;
