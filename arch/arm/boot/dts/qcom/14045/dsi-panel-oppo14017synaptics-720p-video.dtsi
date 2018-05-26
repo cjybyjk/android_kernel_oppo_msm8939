@@ -158,9 +158,12 @@
 		qcom,mdss-pan-physical-width-dimension = <59>;
 		qcom,mdss-pan-physical-height-dimension = <104>;
 
-		cm,mdss-livedisplay-cabc-cmd = [15 01 00 00 10 00 02 55 00];
-		cm,mdss-livedisplay-cabc-ui-value = <0x01>;
-		cm,mdss-livedisplay-cabc-image-value = <0x02>;
-		cm,mdss-livedisplay-cabc-video-value = <0x03>;
+		cm,mdss-livedisplay-cabc-cmd = [
+			15 01 00 00 00 00 02 55 00];
+		cm,mdss-livedisplay-cabc-ui-value = <0x03>;
+		cm,mdss-livedisplay-srgb-on-cmd = [
+			39 01 00 00 00 00 02 57 4C];
+		cm,mdss-livedisplay-srgb-off-cmd = [
+			39 01 00 00 00 00 02 57 40];
 	};
 };
