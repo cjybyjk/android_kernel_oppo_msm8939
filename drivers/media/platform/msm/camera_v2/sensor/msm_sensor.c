@@ -862,7 +862,7 @@ static void register_device_info(struct msm_sensor_ctrl_t *s_ctrl)
 	}
 }
 #endif
-
+EXPORT_SYMBOL(my_vcm_id);
 int msm_sensor_match_id(struct msm_sensor_ctrl_t *s_ctrl)
 {
 	int rc = 0;
