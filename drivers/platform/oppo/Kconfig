@@ -22,6 +22,14 @@ config MACH_14005
 	help
 	  Support for the R5/R5s variants
 
+config MACH_14045
+	bool "R1C board"
+	select MACH_OPPO_MSM8939
+	select SND_SOC_AK4375
+	select SND_SOC_TFA9890
+	help
+	  Support for the R1C variant
+
 config MACH_15011
 	bool "R7f board"
 	select MACH_OPPO_MSM8939

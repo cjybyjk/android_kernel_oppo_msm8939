@@ -589,7 +589,7 @@ int opchg_battery_get_property(struct power_supply *psy,
 			break;
 
 		case POWER_SUPPLY_PROP_BATTERY_FCC:			//dengnw add for battery fcc
-			if(is_project(OPPO_14005) || is_project(OPPO_15011) || is_project(OPPO_15018) || is_project(OPPO_15022))
+			if(is_project(OPPO_14005) || is_project(OPPO_14045) || is_project(OPPO_15011) || is_project(OPPO_15018) || is_project(OPPO_15022))
 			{
 				if(bq27541_di == NULL)
 				{
@@ -607,7 +607,7 @@ int opchg_battery_get_property(struct power_supply *psy,
 			}
 			break;
 		case POWER_SUPPLY_PROP_BATTERY_SOH:			//dengnw add for battery soh
-			if(is_project(OPPO_14005) || is_project(OPPO_15011) || is_project(OPPO_15018) || is_project(OPPO_15022))
+			if(is_project(OPPO_14005) || is_project(OPPO_14045) || is_project(OPPO_15011) || is_project(OPPO_15018) || is_project(OPPO_15022))
 			{
 				if(bq27541_di == NULL)
 				{
@@ -625,7 +625,7 @@ int opchg_battery_get_property(struct power_supply *psy,
 			}
 			break;
 		case POWER_SUPPLY_PROP_BATTERY_CC:			//dengnw add for battery cc
-			if(is_project(OPPO_14005) || is_project(OPPO_15011) || is_project(OPPO_15018) || is_project(OPPO_15022))
+			if(is_project(OPPO_14005) || is_project(OPPO_14045) || is_project(OPPO_15011) || is_project(OPPO_15018) || is_project(OPPO_15022))
 			{
 				if(bq27541_di == NULL)
 				{

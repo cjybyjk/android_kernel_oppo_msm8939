@@ -1345,6 +1345,9 @@ static void int_key_report(struct synaptics_ts_data *ts)
 		for (i = 0; ts->kpd && i < ARRAY_SIZE(key_mapping); i++) {
 			int bit = key_mapping[i][0];
 			int keycode = key_mapping[i][1];
+			if(is_project(OPPO_14045)) {
+				keycode = key_mapping[2 - i][1];
+			}
 			if ((ret & bit) && !(ts->pre_btn_state & bit)) {
 				if (!is_touch) {
 					input_report_key(ts->kpd, keycode, 1);
@@ -3089,20 +3092,30 @@ static  void get_tp_id(int TP_ID1,int TP_ID2,int TP_ID3, struct synaptics_ts_dat
 		ret = gpio_request(TP_ID3,"TP_ID3");
 		id3=gpio_get_value(TP_ID3);
 	}
-
-	if((id1 == 1)&&(id2 == 1)&&(id3 == 0)){
-		TPDTM_DMESG("%s::OFILM\n",__func__);
-		tp_dev=TP_OFILM;
-	}else if((id1 == 0)&&(id2 == 0)&&(id3 == 0)){
-		TPDTM_DMESG("%s::TP_TPK\n",__func__);
-		tp_dev=TP_TPK;
-	}else if((id1 == 0)&&(id2 == 0)&&(id3 == 0)){
-		TPDTM_DMESG("%s::TP_TRULY\n",__func__);
-		tp_dev=TP_TRULY;
+	if(is_project(OPPO_14045)){
+		if(id1 == 1){
+			TPDTM_DMESG("%s::TRULY\n",__func__);			
+			tp_dev=TP_TRULY;
+		}else{
+			TPDTM_DMESG("%s::TP_TPK\n",__func__);
+			tp_dev=TP_TPK;
+		}
 	}else{
-		TPDTM_DMESG("%s::TP_UNKNOWN\n",__func__);
-		tp_dev=TP_TRULY;
+		if((id1 == 1)&&(id2 == 1)&&(id3 == 0)){
+			TPDTM_DMESG("%s::OFILM\n",__func__);
+			tp_dev=TP_OFILM;
+		}else if((id1 == 0)&&(id2 == 0)&&(id3 == 0)){
+			TPDTM_DMESG("%s::TP_TPK\n",__func__);
+			tp_dev=TP_TPK;
+		}else if((id1 == 0)&&(id2 == 0)&&(id3 == 0)){
+			TPDTM_DMESG("%s::TP_TRULY\n",__func__);
+			tp_dev=TP_TRULY;
+		}else{
+			TPDTM_DMESG("%s::TP_UNKNOWN\n",__func__);
+			tp_dev=TP_TRULY;
+		}
 	}
+
 	printk("%s::id1:%d id2:%d id3:%d\n",__func__,id1,id2,id3);
 }
 
@@ -3369,6 +3382,16 @@ static int synaptics_ts_probe(
 		strcpy(ts->fw_name,"tp/15011/15011_FW_S3508_Tpk.img");
 		strcpy(ts->test_limit_name,"tp/15011/15011_Limit_Tpk.img");
 	}
+	if(is_project(OPPO_14045)) {
+		tp_info.manufacture = ts->manu_name;
+		if(tp_dev == TP_TRULY) {
+			strcpy(ts->fw_name,"tp/14045/14045_Firmware_Truly.img");
+			strcpy(ts->test_limit_name,"tp/14045/14045_Limit_Truly.img");
+		}else{
+			strcpy(ts->fw_name,"tp/14045/14045_FW_S4291_Tpk.img");
+			strcpy(ts->test_limit_name,"tp/14045/14045_Limit_Tpk.img");
+		}
+	}
 	if (is_project(OPPO_14005)) {
 		tp_info.manufacture = "SAMSUNG";
 		strcpy(ts->fw_name,"tp/14005/14005_FW_S3508_Tpk.img");
@@ -3405,7 +3428,7 @@ static int synaptics_ts_probe(
 	if(ret < 0) {
 		TPD_ERR("synaptics_input_init failed!\n");
 	}
-	if (is_project(OPPO_15011) || is_project(OPPO_14005)) {
+	if (is_project(OPPO_15011) || is_project(OPPO_14045) || is_project(OPPO_14005)) {
 		ret = synaptics_tpd_button_init(ts);
 		if(ret < 0) {
 			TPD_ERR("synaptics_tpd_button_init failed!\n");

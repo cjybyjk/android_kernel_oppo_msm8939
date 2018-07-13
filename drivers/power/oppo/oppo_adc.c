@@ -133,6 +133,19 @@ int opchg_get_prop_low_battery_voltage(struct opchg_charger *chip)
 						V_low_battery = (int)mpp_uV/1000;
 					}
 				}
+				else if(is_project(OPPO_14045))
+				{
+					if(get_PCB_Version()== HW_VERSION__10)
+					{
+						mpp_uV =results.physical*34;
+						V_low_battery = (int)mpp_uV/10000;
+					}
+					else
+					{
+						mpp_uV =results.physical*4;
+						V_low_battery = (int)mpp_uV/1000;
+					}
+				}
 				else if(is_project(OPPO_15011) || is_project(OPPO_15018) || is_project(OPPO_15022))
 				{
 					mpp_uV =results.physical*4;
