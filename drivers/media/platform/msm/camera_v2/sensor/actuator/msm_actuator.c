@@ -13,6 +13,7 @@
 #define pr_fmt(fmt) "%s:%d " fmt, __func__, __LINE__
 
 #include <linux/module.h>
+#include <soc/oppo/oppo_project.h>
 #include "msm_sd.h"
 #include "msm_actuator.h"
 #include "msm_cci.h"
@@ -23,7 +24,7 @@ DEFINE_MSM_MUTEX(msm_actuator_mutex);
 #define CDBG(fmt, args...) pr_debug(fmt, ##args)
 #define MAX_QVALUE  4096
 static struct v4l2_file_operations msm_actuator_v4l2_subdev_fops;
-
+extern bool openloop_flag;
 #define PARK_LENS_LONG_STEP 7
 #define PARK_LENS_MID_STEP 5
 #define PARK_LENS_SMALL_STEP 3
@@ -657,30 +658,89 @@ static int32_t msm_actuator_vreg_control(struct msm_actuator_ctrl_t *a_ctrl,
 static int32_t msm_actuator_power_down(struct msm_actuator_ctrl_t *a_ctrl)
 {
 	int32_t rc = 0;
+	uint16_t code = 0;
+	uint8_t buf[2];
+	uint16_t value = 0;
+
 	CDBG("Enter\n");
-	if (a_ctrl->actuator_state != ACTUATOR_POWER_DOWN) {
+	if (is_project(OPPO_14045)) {  	
+ 		if (a_ctrl->actuator_state != ACTUATOR_POWER_DOWN) {
+			if (a_ctrl->vcm_enable) {
+				rc = gpio_direction_output(a_ctrl->vcm_pwd, 0);
+				if (!rc)
+					gpio_free(a_ctrl->vcm_pwd);
+			}
+			if (openloop_flag) { // romh
+				pr_err("actuator is romh\n");
+				code = a_ctrl->current_lens_pos;
+				CDBG("curr_lens_pos = %d\n",a_ctrl->current_lens_pos);
+            
+				if (code>200) {
+					code = 200;
+					value = (code) |(0xFF00 & 0xc400);
+					buf[0] = (value & 0xFF00) >> 8;
+					buf[1] = value & 0xFF;
+					rc = a_ctrl->i2c_client.i2c_func_tbl->i2c_write_seq(&a_ctrl->i2c_client,
+						buf[0],&buf[1], 1);
+					usleep_range(15000, 16000);
+				}
+				while(code){
+					CDBG("code1 %d\n",code);
+					code = (code > 10)?(code - 10) : 0;
+					value = (code) |(0xFF00 & 0xc400);
+					buf[0] = (value & 0xFF00) >> 8;
+					buf[1] = value & 0xFF;
+					rc = a_ctrl->i2c_client.i2c_func_tbl->i2c_write_seq(&a_ctrl->i2c_client,
+						buf[0],&buf[1], 1);
+					usleep_range(10000, 12000);
+				}
+            
+				buf[0] = buf[1] =  0;
+				rc = a_ctrl->i2c_client.i2c_func_tbl->i2c_write_seq(&a_ctrl->i2c_client,
+				    buf[0],&buf[1], 1);
+				usleep_range(10000, 12000);
+			}
 
-		if (a_ctrl->func_tbl && a_ctrl->func_tbl->actuator_park_lens) {
-			rc = a_ctrl->func_tbl->actuator_park_lens(a_ctrl);
-			if (rc < 0)
-				pr_err("%s:%d Lens park failed.\n",
-					__func__, __LINE__);
+			rc = msm_actuator_vreg_control(a_ctrl, 0);
+			if (rc < 0) {
+			    pr_err("%s failed %d\n", __func__, __LINE__);
+			    return rc;
+			}
+	   
+			if (a_ctrl->step_position_table != NULL)
+			    kfree(a_ctrl->step_position_table);
+			a_ctrl->step_position_table = NULL;
+			if (a_ctrl->i2c_reg_tbl != NULL)
+			    kfree(a_ctrl->i2c_reg_tbl);
+			a_ctrl->i2c_reg_tbl = NULL;
+			a_ctrl->i2c_tbl_index = 0;
+			a_ctrl->actuator_state = ACTUATOR_POWER_DOWN;     
+ 		}
+	} else {
+		if (a_ctrl->actuator_state != ACTUATOR_POWER_DOWN) {
+
+			if (a_ctrl->func_tbl && a_ctrl->func_tbl->actuator_park_lens) {
+				rc = a_ctrl->func_tbl->actuator_park_lens(a_ctrl);
+				if (rc < 0)
+					pr_err("%s:%d Lens park failed.\n",
+						__func__, __LINE__);
+			}
+
+			rc = msm_actuator_vreg_control(a_ctrl, 0);
+			if (rc < 0) {
+				pr_err("%s failed %d\n", __func__, __LINE__);
+				return rc;
+			}
+
+			if (a_ctrl->step_position_table != NULL)
+				kfree(a_ctrl->step_position_table);
+			a_ctrl->step_position_table = NULL;
+			if (a_ctrl->i2c_reg_tbl != NULL)
+				kfree(a_ctrl->i2c_reg_tbl);
+			a_ctrl->i2c_reg_tbl = NULL;
+			a_ctrl->i2c_tbl_index = 0;
+			a_ctrl->actuator_state = ACTUATOR_POWER_DOWN;
 		}
-
-		rc = msm_actuator_vreg_control(a_ctrl, 0);
-		if (rc < 0) {
-			pr_err("%s failed %d\n", __func__, __LINE__);
-			return rc;
-		}
-
-		if (a_ctrl->step_position_table != NULL)
-			kfree(a_ctrl->step_position_table);
-		a_ctrl->step_position_table = NULL;
-		if (a_ctrl->i2c_reg_tbl != NULL)
-			kfree(a_ctrl->i2c_reg_tbl);
-		a_ctrl->i2c_reg_tbl = NULL;
-		a_ctrl->i2c_tbl_index = 0;
-		a_ctrl->actuator_state = ACTUATOR_POWER_DOWN;
 	}
 	CDBG("Exit\n");
 	return rc;

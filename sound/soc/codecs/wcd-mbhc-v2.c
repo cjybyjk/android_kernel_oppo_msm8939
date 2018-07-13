@@ -1409,7 +1409,8 @@ static void wcd_correct_swch_plug(struct work_struct *work)
 					mbhc->hs_detect_work_stop);
 			goto exit;
 		}
-    if (is_project(OPPO_15011) || is_project(OPPO_15018) || is_project(OPPO_15022)||is_project(OPPO_15109)) {
+    if (is_project(OPPO_14045) || is_project(OPPO_15011) || is_project(OPPO_15018) \
+		|| is_project(OPPO_15022)||is_project(OPPO_15109)) {
         //John.Xu@PhoneSw.AudioDriver, 2015/06/11, Add for Qcom patch for slow insert headset
             if (mbhc->btn_press_intr) {
                 wcd_cancel_btn_work(mbhc);
@@ -1455,7 +1456,8 @@ static void wcd_correct_swch_plug(struct work_struct *work)
 			plug_type = MBHC_PLUG_TYPE_HIGH_HPH;
 			hph_count = hph_count + 1;
 			/*OPPO	2015-05-08, zhangping add for  detect start*/
-			if ((hph_count == 6) && ((is_project(OPPO_15011)) || (is_project(OPPO_15018)) || (is_project(OPPO_15022)) || (is_project(OPPO_15109))))
+			if ((hph_count == 6) && ((is_project(OPPO_14045)) || (is_project(OPPO_15011)) \
+				|| (is_project(OPPO_15018)) || (is_project(OPPO_15022)) || (is_project(OPPO_15109))))
 			{
 				pr_err("%s:HPH will detected as headset\n",__func__);
 				plug_type = MBHC_PLUG_TYPE_HEADSET;
@@ -1480,7 +1482,8 @@ static void wcd_correct_swch_plug(struct work_struct *work)
 				pr_err("%s: cable is headset\n",
 						__func__);
                 //John.Xu@PhoneSw.AudioDriver, 2015/06/11, Add for for slow insert headset
-                if (is_project(OPPO_15011) || is_project(OPPO_15018) || is_project(OPPO_15022)||is_project(OPPO_15109)) {
+                if (is_project(OPPO_14045) || is_project(OPPO_15011) || is_project(OPPO_15018) \
+					|| is_project(OPPO_15022)||is_project(OPPO_15109)) {
                     if(++headset_count == 2) {
                          goto report;
                     } else {
@@ -1501,7 +1504,8 @@ static void wcd_correct_swch_plug(struct work_struct *work)
 		}
 
         //John.Xu@PhoneSw.AudioDriver, 2015/06/11, Add for Qcom patch for slow insert headset
-        if (is_project(OPPO_15011) || is_project(OPPO_15018) || is_project(OPPO_15022)||is_project(OPPO_15109)) {
+        if (is_project(OPPO_14045) || is_project(OPPO_15011) || is_project(OPPO_15018) \
+			|| is_project(OPPO_15022)||is_project(OPPO_15109)) {
         /*
          * instead of hogging system by contineous polling, wait for
          * sometime and re-check stop request again.
