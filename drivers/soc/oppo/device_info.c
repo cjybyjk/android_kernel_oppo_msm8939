@@ -288,14 +288,6 @@ static void sub_mainboard_verify(struct devinfo_data *devinfo_data)
 	mainboard_info.version = "Qcom";
 
 	switch (get_project()) {
-		case OPPO_14045: {
-			if (id1 == 0)
-				sprintf(mainboard_info.manufacture,
-					"14045-%d", get_Operator_Version());
-			else
-				mainboard_info.manufacture = "UNSPECIFIED";
-			break;
-		}
 		case OPPO_15011: {
 			if (id1 == 0)
 				sprintf(mainboard_info.manufacture,
@@ -397,11 +389,6 @@ static void mainboard_verify(struct devinfo_data *devinfo_data)
 		case HW_VERSION__15:
 			mainboard_info.version = "15";
 			sprintf(mainboard_info.manufacture, "%d-(T3-T4)",
-				hw_operator_version);
-			break;
-		case HW_VERSION__16:
-			mainboard_info.version = "16";
-			sprintf(mainboard_info.manufacture, "%d-(T4-T5)",
 				hw_operator_version);
 			break;
 		default:
