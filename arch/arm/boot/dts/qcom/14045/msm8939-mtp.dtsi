@@ -229,25 +229,25 @@
 			qcom,iterm-ma = <150>;
 			qcom,recharge-mv = <100>;
 			qcom,fast-charger-project-sign= <0>;
-			qcom,fastchg-current-max-ma = <1500>;
-			qcom,input-current-max-ma = <1500>;
+			qcom,fastchg-current-max-ma = <2500>;
+			qcom,input-current-max-ma = <2500>;
 			qcom,float-voltage-mv = <4320>;
 
 			qcom,hot_bat_decidegc = <550>;
 			qcom,temp_hot_vfloat_mv = <4100>;
-			qcom,temp_hot_fastchg_current_ma = <720>;
+			qcom,temp_hot_fastchg_current_ma = <1050>;
 
 			qcom,warm_bat_decidegc = <450>;
 			qcom,temp_warm_vfloat_mv = <4320>;
-			qcom,temp_warm_fastchg_current_ma = <1500>;
+			qcom,temp_warm_fastchg_current_ma = <2000>;
 
 			qcom,pre_normal_bat_decidegc = <200>;
 			qcom,temp_pre_normal_vfloat_mv = <4320>;
-			qcom,temp_pre_normal_fastchg_current_ma = <1200>;
+			qcom,temp_pre_normal_fastchg_current_ma = <2000>;
 
 			qcom,pre_cool_bat_decidegc = <100>;
 			qcom,temp_pre_cool_vfloat_mv = <4200>;
-			qcom,temp_pre_cool_fastchg_current_ma = <500>;
+			qcom,temp_pre_cool_fastchg_current_ma = <900>;
 
 			qcom,cool_bat_decidegc = <0>;
 			qcom,temp_cool_vfloat_mv = <4000>;
