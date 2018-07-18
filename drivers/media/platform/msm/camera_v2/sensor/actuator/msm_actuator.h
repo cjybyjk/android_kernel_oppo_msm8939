@@ -91,6 +91,13 @@ struct msm_actuator_ctrl_t {
 	struct msm_actuator_reg_params_t reg_tbl[MAX_ACTUATOR_REG_TBL_SIZE];
 	uint16_t region_size;
 	void *user_data;
+#ifdef CONFIG_MACH_OPPO
+	uint32_t vcm_pwd;
+	uint32_t vcm_enable;
+    uint16_t current_lens_pos;
+    uint32_t hw_params;
+    enum actuator_type act_type;
+#endif
 	uint32_t total_steps;
 	uint16_t pwd_step;
 	uint16_t initial_code;
