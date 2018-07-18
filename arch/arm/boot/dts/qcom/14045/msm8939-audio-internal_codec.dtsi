@@ -17,7 +17,7 @@
 		qcom,msm-snd-card-id = <3>;
 		qcom,msm-ext-pa = "secondary", "quaternary";
 		qcom,msm-mbhc-hphl-swh = <1>;
-		qcom,msm-hs-micbias-type = "external";
+		qcom,msm-hs-micbias-type = "internal";
 		qcom,msm-micbias2-ext-cap;
 		qcom,audio-routing =
 			"RX_BIAS", "MCLK",
